@@ -20,4 +20,4 @@ services:
     build:
       context: ./db
     environment:
-      -  MYSQL_ROOT_PASSWORD=Zaq12wsx
+      MYSQL_ROOT_PASSWORD: Zaq12wsx
