@@ -1,64 +1,85 @@
-
 version: 2.1
 orbs:
   node: circleci/node@2.1.0
 jobs:
-  build-test:
-  build:
+  build-and-test:
+  build:  
     executor:
       name: node/default
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-         name: Build docker containers
-         command: docker-compose up -d
-
-  test_1:
+      
+      
+  acceptance_test_1:
     executor:
       name: node/default
     steps:
       - checkout
       - node/install-packages:
-         app-dir: ./server
+          app-dir: ./server
       - run:
-         command: npm install
-         working_directory: ./server
-      - run: 
-         command: npm test
-         working_directory: ./server
-
-  test_2:
+          command: npm install
+          working_directory: ./server
+      - run:
+          command: npm test
+          working_directory: ./server
+  
+  acceptance_test_2:
     executor:
       name: node/default
     steps:
       - checkout
-      - run: 
-         command: npm install
-         working_directory: ./client
-      - run: 
-         command: npm test
-         working_directory: ./client
-
+      - run:
+          command: npm install
+          working_directory: ./client
+      - run:
+          command: npm test
+          working_directory: ./client
+   
+  docker-mk:
+    machine: true
+    steps:
+      - checkout          
+      - run:
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "camillocommits" --password-stdin
+            sudo docker build ./db -t camillocommits/node-react-db
+            sudo docker push camillocommits/node-react-db:latest
+      - run:
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "camillocommits" --password-stdin
+            sudo docker build ./server -t camillocommits/node-svr
+            sudo docker push camillocommits/node-svr
+      - run:
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "camillocommits" --password-stdin
+            sudo docker build ./client -t camillocommits/cra-client
+            sudo docker push camillocommits/cra-client
+            
 workflows:
-  build-test:
-    jobs:
-      - build:
-         filters:
-           branches:
-             only:
-               - master
-      - test_1:
-         filters:
-           branches:
-             only:
-               - master
-         requires:
-           - build
-      - test_2:
-         filters:
-           branches:
-             only:
-               - master
-         requires:
-           - build
+    build-and-test:
+      jobs:
+        - build:
+          filters:
+            branches:
+              only:
+                - master
+        - acceptance_test_1:
+            filters:
+              branches:
+                only:
+                 - master
+            requires:
+                - build
+        - acceptance_test_2:
+            filters:
+              branches:
+                only:
+                 - master
+            requires:
+                - build
+        - docker-mk:
+            requires:
+              - acceptance_test_1
+              - acceptance_test_2
