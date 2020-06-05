@@ -1,5 +1,5 @@
-version:2.1
-  orbs:
+version: 2.1
+   orbs:
     node: circleci/node@2.1.0
   jobs:
     build-and-test:
@@ -22,7 +22,7 @@ version:2.1
         -run:
           command: npm test
          working_directory: ./server
-   acceptance_test_2:
+    acceptance_test_2:
      executor:
         name: node/default
       steps:
