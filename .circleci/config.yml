@@ -44,18 +44,18 @@ jobs:
       - run:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "dariusznowakdockerid" --password-stdin
-            sudo docker build ./db -t camillocommits/node-react-db
-            sudo docker push camillocommits/node-react-db:latest
+            sudo docker build ./db -t dariusznowakdockerid/node-react-db
+            sudo docker push dariusznowakdockerid/node-react-db:latest
       - run:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "dariusznowakdockerid" --password-stdin
-            sudo docker build ./server -t camillocommits/node-svr
-            sudo docker push camillocommits/node-svr
+            sudo docker build ./server -t dariusznowakdockerid/node-svr
+            sudo docker push dariusznowakdockerid/node-svr
       - run:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "dariusznowakdockerid" --password-stdin
-            sudo docker build ./client -t camillocommits/cra-client
-            sudo docker push camillocommits/cra-client
+            sudo docker build ./client -t dariusznowakdockerid/cra-client
+            sudo docker push dariusznowakdockerid/cra-client
             
 workflows:
     build-and-test:
