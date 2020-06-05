@@ -34,7 +34,7 @@ version: 2.1
             command: npm test
             working_directory: ./client
    workflows:
-      build-and-test
+      build-and-test:
          jobs:
             - build
             - acceptance_test_1:
