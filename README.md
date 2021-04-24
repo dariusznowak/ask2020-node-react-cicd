@@ -1,4 +1,4 @@
-# ASK 2020 Nodejs-React app
+# ASK 2020 Nodejs-React app - ćwiczenia laboratoryjne AGH
 **Cel ćwiczenia:**
 
 ## Uruchomienie aplikacji
